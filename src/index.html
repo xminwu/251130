@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20251130 新竹一日遊 (單一檔案多分頁，含圖片)</title>
+    <style>
+        /* --- 通用基礎樣式 --- */
+        body {
+            font-family: '微軟正黑體', 'Microsoft JhengHei', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .content-section {
+            display: none; /* 預設隱藏所有內容區塊 */
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+        .nav-bar {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background-color: #d9ead3; /* 預設綠色導航底色 */
+        }
+        .nav-bar a {
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 15px;
+            margin: 0 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .nav-bar .nav-schedule { color: #38761d; }
+        .nav-bar .nav-food { color: #e67e22; }
+        .nav-bar .nav-route { color: #3498db; }
+
+        .nav-bar a:hover { background-color: #eee; }
+        .nav-bar .active {
+            color: white !important;
+        }
+        
+        /* 圖片通用樣式，確保圖片適應寬度 */
+        .route-map-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+            margin: 15px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- 連結/圖標樣式 --- */
+        .map-link {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.9em;
+            margin-left: 10px;
+            color: #e84118;
+            text-decoration: none;
+            font-weight: normal;
+        }
+        .map-link .map-icon {
+            font-size: 1.2em;
+            margin-right: 3px;
+        }
+
+        /* --- 綠色主題 (行程表) --- */
+        #schedule-page { background-color: #f3f7f0; }
+        #schedule-page h1, #schedule-page h2, #schedule-page .timeline-time, #schedule-page a { color: #38761d; }
+        #schedule-page .nav-schedule.active { background-color: #38761d; }
+
+        /* --- 橘色主題 (美食) --- */
+        #food-page { background-color: #fffbf3; }
+        #food-page h1, #food-page h2, #food-page a, #food-page .food-item strong span { color: #e67e22; }
+        #food-page .nav-food.active { background-color: #e67e22; }
+        #food-page .food-item { border-color: #f0d9c9; }
+        #food-page .food-item strong { color: #a0522d; }
+
+        /* --- 藍色主題 (路線) --- */
+        #route-page { background-color: #f3f9ff; }
+        #route-page h1, #route-page h2, #route-page a, #route-page .route-map-link { color: #3498db; }
+        #route-page .nav-route.active { background-color: #3498db; }
+        #route-page .site-item { border-color: #cce5f7; }
+        #route-page .site-item strong { color: #2c3e50; }
+
+
+        /* --- 時間軸樣式 (僅用於 schedule-page) --- */
+        #schedule-page .timeline { list-style: none; padding: 0; margin: 0; position: relative; }
+        #schedule-page .timeline:before { content: ''; position: absolute; top: 0; bottom: 0; left: 120px; width: 3px; background: #6aa84f; }
+        #schedule-page .timeline-item { margin-bottom: 40px; position: relative; padding-left: 150px; }
+        #schedule-page .timeline-item:before { content: ''; width: 15px; height: 15px; background: #38761d; border: 3px solid #f3f7f0; border-radius: 50%; position: absolute; left: 112px; top: 5px; z-index: 1; }
+        #schedule-page .timeline-content { background: #fcfcfc; border-left: 5px solid #6aa84f; padding: 15px 20px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        #schedule-page .timeline-note { margin-top: 8px; padding-top: 8px; border-top: 1px dashed #eee; color: #666; font-size: 0.9em; line-height: 1.5; }
+        #schedule-page a { text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    
+    <div class="nav-bar" id="main-nav">
+        <a href="javascript:void(0)" class="nav-schedule active" onclick="showPage('schedule-page', this)">📅 一日行程表</a>
+        <a href="javascript:void(0)" class="nav-food" onclick="showPage('food-page', this)">🍜 城隍廟美食</a>
+        <a href="javascript:void(0)" class="nav-route" onclick="showPage('route-page', this)">🚴 南寮路線景點</a>
+    </div>
+
+    <div id="schedule-page" class="content-section" style="display: block;">
+        <h1>20251130 新竹一日遊行程表</h1>
+        <ul class="timeline">
+            <li class="timeline-item">
+                <div class="timeline-time">07:00-08:10</div>
+                <div class="timeline-content">
+                    <strong>🏡 開車到家 ＆ 早餐</strong>
+                    <div class="timeline-note">準備出門前的時間，請確保準時。</div>
+                </div>
+            </li>
+            
+            <li class="timeline-item">
+                <div class="timeline-time">09:00-09:15</div>
+                <div class="timeline-content">
+                    <strong>🚗 出發動物園</strong>
+                </div>
+            </li>
+
+            <li class="timeline-item">
+                <div class="timeline-time">09:30-10:30</div>
+                <div class="timeline-content">
+                    <strong>
+                        <a href="https://zoo-info.hccg.gov.tw/" target="_blank">🐘 新竹市立動物園</a>
+                        <a href="https://www.google.com/maps/search/?api=1&query=新竹市立動物園" target="_blank" class="map-link" title="Google地圖導航"><span class="map-icon">📍</span> Google地圖</a>
+                    </strong>
+                    <div class="timeline-note">
+                        **開放時間：** 09:00-17:00；門票50元。
+                    </div>
+                </div>
+            </li>
+
+            <li class="timeline-item">
+                <div class="timeline-time">10:30-11:00</div>
+                <div class="timeline-content">
+                    <strong>
+                        <a href="https://zoo-info.hccg.gov.tw/portfolio-item/taiwan-insectarium/" target="_blank">🐛 台灣昆蟲館 - 新竹館</a>
+                        <a href="https://www.google.com/maps/search/?api=1&query=台灣昆蟲館新竹館" target="_blank" class="map-link" title="Google地圖導航"><span class="map-icon">📍</span> Google地圖</a>
+                    </strong>
+                    <div class="timeline-note">
+                        **開放時間：10:00-17:00**，免費入場。
+                    </div>
+                </div>
+            </li>
+
+            <li class="timeline-item">
+                <div class="timeline-time">11:00-12:00</div>
+                <div class="timeline-content">
+                    <strong>
+                        💎 新竹市玻璃工藝博物館
+                        <a href="https://www.google.com/maps/search/?api=1&query=新竹市玻璃工藝博物館" target="_blank" class="map-link" title="Google地圖導航"><span class="map-icon">📍</span> Google地圖</a>
+                    </strong>
+                    <div class="timeline-note">
+                        門票50元，預計遊玩1小時。
+                    </div>
+                </div>
+            </li>
+
+            <li class="timeline-item">
+                <div class="timeline-time">12:00-12:20</div>
+                <div class="timeline-content">
+                    <strong>
+                        🅿️ <a href="https://www.google.com/maps/search/?api=1&query=停享停車府後地下停車場" target="_blank">停享停車府後地下停車場</a>
+                        <a href="https://www.google.com/maps/search/?api=1&query=停享停車府後地下停車場" target="_blank" class="map-link" title="Google地圖導航"><span class="map-icon">📍</span> Google地圖</a>
+                    </strong>
+                </div>
+            </li>
+
+            <li class="timeline-item">
+                <div class="timeline-time">12:20-12:30</div>
+                <div class="timeline-content">
+                    <strong>
+                        🚶 步行到 <a href="https://www.google.com/maps/search/?api=1&query=新竹都城隍廟" target="_blank">城隍廟</a>
+                        <a href="https://www.google.com/maps/search/?api=1&query=新竹都城隍廟" target="_blank" class="map-link" title="Google地圖導航"><span class="map-icon">📍</span> Google地圖</a>
+                    </strong>
+                </div>
+            </li>
+
+            <li class="timeline-item">
+                <div class="timeline-time">12:30-13:30</div>
+                <div class="timeline-content">
+                    <strong>🍜 城隍廟午餐覓食</strong>
+                    <div class="timeline-note">
+                        詳情請點擊上方**城隍廟美食**頁面查看。
+                    </div>
+                </div>
+            </li>
+            
+            <li class="timeline-item">
+                <div class="timeline-time">13:30-13:40</div>
+                <div class="timeline-content">
+                    <strong>🚶 步行到停車場</strong>
+                </div>
+            </li>
+
+            <li class="timeline-item">
+                <div class="timeline-time">13:40-14:00</div>
+                <div class="timeline-content">
+                    <strong>🚗 前往 <a href="https://www.google.com/maps/search/?api=1&query=新竹南寮漁港" target="_blank">南寮漁港</a>
+                        <a href="https://www.google.com/maps/search/?api=1&query=新竹南寮漁港" target="_blank" class="map-link" title="Google地圖導航"><span class="map-icon">📍</span> Google地圖</a>
+                    </strong>
+                </div>
+            </li>
+
+            <li class="timeline-item">
+                <div class="timeline-time">14:00-14:20</div>
+                <div class="timeline-content">
+                    <strong>🚴 租腳踏車 (南寮漁港)</strong>
+                </div>
+            </li>
+
+            <li class="timeline-item">
+                <div class="timeline-time">14:20-17:20</div>
+                <div class="timeline-content">
+                    <strong>🌊 腳踏車GO (17公里海岸線)</strong>
+                    <div class="timeline-note">
+                        **沿途景點：** 魚鱗天梯、香山濕地賞蟹步道等。詳情請點擊上方**南寮路線景點**頁面查看。
+                    </div>
+                </div>
+            </li>
+
+            <li class="timeline-item">
+                <div class="timeline-time">17:20-18:00</div>
+                <div class="timeline-content">
+                    <strong>
+                        🍲 南寮臭豆腐
+                        <a href="https://www.google.com/maps/search/?api=1&query=南寮臭豆腐" target="_blank" class="map-link" title="Google地圖導航"><span class="map-icon">📍</span> Google地圖</a>
+                    </strong>
+                    <div class="timeline-note">
+                        **營業時間：** 06:00-18:00 (請注意，營業時間較短)。
+                    </div>
+                </li>
+        </ul>
+    </div>
+
+    <div id="food-page" class="content-section">
+        <h1>🍜 20251130 城隍廟美食巡禮</h1>
+        
+        <h2>📍 午餐地點：新竹城隍廟</h2>
+        <p>
+            城隍廟是新竹美食的精華區，請根據喜好自由搭配！
+            <a href="https://www.google.com/maps/search/?api=1&query=新竹都城隍廟" target="_blank" class="map-link" title="Google地圖導航"><span style="font-size: 1.2em;">📍</span> Google地圖</a>
+        </p>
+        
+        <ul class="food-list">
+            <li class="food-item">
+                <strong><span>🦆</span> 許二姊鴨肉麵 (飯)</strong>    <a href="https://maps.app.goo.gl/HC3L7T3DLdyDw4XFA" target="_blank" class="map-link" title="Google地圖導航"><span class="map-icon">📍</span> Google地圖</a>
+                <p><strong>特色：</strong> 煙燻鴨肉香氣十足，麵條Q彈，是新竹鴨肉的代表之一。</p>
+            </li>
+            <li class="food-item">
+                <strong><span>🍚</span> 廟口鴨香飯</strong>
+              <a href="https://maps.app.goo.gl/yD5o7jAE43iMdUvC9" target="_blank" class="map-link" title="Google地圖導航"><span class="map-icon">📍</span> Google地圖</a>
+                <p><strong>特色：：</strong> 鴨油淋飯，搭配切塊鴨肉與酸菜，簡單卻美味的組合，是新竹在地人氣小吃。</p>
+            </li>
+            <li class="food-item">
+                <strong><span>🥢</span> 城隍廟裡面炒米粉</strong>
+                <p><strong>特色：</strong> 新竹米粉Q彈有嚼勁，配上肉燥，建議搭配貢丸湯或肉羹。</p>
+            </li>
+            <li class="food-item">
+                <strong><span>🥟</span> 糯米餃 (或稱水餃)</strong><a href="https://maps.app.goo.gl/3vLxe1hGyY5ckYja9" target="_blank" class="map-link" title="Google地圖導航"><span class="map-icon">📍</span> Google地圖</a>
+                <p><strong>特色：</strong> 外皮滑順，內餡飽滿多汁，新竹獨有的傳統風味。</p>
+            </li>
+        </ul>
+        
+        <h2>🍰 飯後甜點</h2>
+        <ul class="food-list">
+            <li class="food-item">
+                <strong><span>🍠</span> 林家芋泥球</strong><a href="https://maps.app.goo.gl/cs22uY386nMLT5CV8" target="_blank" class="map-link" title="Google地圖導航"><span class="map-icon">📍</span> Google地圖</a>
+              <p><img src="https://vivawei.tw/wp-content/uploads/0-526.jpg" alt="17公里海岸線自行車路線圖" class="route-map-image"> </p>
+                <p><strong>特色：</strong> 芋頭控必試，口感綿密，甜度適中。</p>
+            </li>
+            <li class="food-item">
+                <strong><span>🧇</span> 梅花雞蛋糕</strong>
+                <p><strong>特色：</strong> 外型可愛，外酥內軟，適合當作下午茶點。</p>
+            </li>
+        </ul>
+    </div>
+
+    <div id="route-page" class="content-section">
+        <h1>🚴 20251130 南寮自行車路線景點</h1>
+        
+        <h2 style="margin-bottom: 15px;">🌊 17公里海岸線景點介紹 (南寮漁港出發)</h2>
+
+        <img src="https://bobbyfun.tw/wp-content/uploads/pixnet/b9756340ea2ce88c90abbbf45773dabe.jpg" alt="17公里海岸線自行車路線圖" class="route-map-image">
+        <p style="margin-top: 15px;">這條自行車道總長約17公里，來回約34公里，景點豐富，請根據體力與時間選擇停留點。</p>
+        
+        <ul class="site-list">
+            <li class="site-item">
+                <strong><span>🐟</span> 魚鱗天梯</strong>
+                <p><strong>特色：</strong> 網美打卡熱點！由消波塊鋪成的階梯，形成獨特的魚鱗狀景觀。</p>
+            </li>
+            <li class="site-item">
+                <strong><span>🦀</span> 香山濕地賞蟹步道</strong>
+                <p><strong>特色：</strong> ㄇ字型的木棧道延伸入濕地，是觀賞招潮蟹、彈塗魚等生態的最佳地點（需注意漲退潮時間）。</p>
+            </li>
+            <li class="site-item">
+                <strong><span>⛵</span> 海山漁港</strong>
+                <p><strong>特色：</strong> 路線上的小型漁港，可感受純樸的漁村風光。</p>
+            </li>
+            <li class="site-item">
+                <strong><span>🏜️</span> 香山沙丘</strong>
+                <p><strong>特色：</strong> 新竹版的沙漠景觀，海風吹拂形成的沙丘地形，拍照效果非常壯觀。</p>
+            </li>
+            <li class="site-item">
+                <strong><span>🌉</span> 香山豎琴橋 (備註)</strong>
+                <p><strong>特別提醒：</strong> 若自行車道在某些路段無法通過，需改道至長興蝦場後再轉往白雲橋。</p>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        // 腳本功能：切換顯示不同的分頁內容
+        function showPage(pageId, clickedLink) {
+            // 隱藏所有內容區塊
+            const pages = document.querySelectorAll('.content-section');
+            pages.forEach(page => {
+                page.style.display = 'none';
+            });
+
+            // 顯示被點擊的區塊
+            document.getElementById(pageId).style.display = 'block';
+
+            // 移除所有導航連結的 'active' 樣式
+            const navLinks = document.querySelectorAll('.nav-bar a');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // 為被點擊的連結加上 'active' 樣式
+            if (clickedLink) {
+                clickedLink.classList.add('active');
+            }
+        }
+        
+        // 頁面加載完成後，預設顯示行程表
+        window.onload = function() {
+            showPage('schedule-page', document.querySelector('.nav-schedule'));
+        };
+    </script>
+</body>
+</html>
